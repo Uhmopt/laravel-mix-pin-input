@@ -20,10 +20,276 @@ Object.defineProperty(exports, "__esModule", ({
 }));
 var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var react_dom_1 = __importDefault(__webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js"));
+var pin_input_1 = __importDefault(__webpack_require__(/*! ./pages/pin-input */ "./resources/js/pages/pin-input/index.tsx"));
+var container_1 = __importDefault(__webpack_require__(/*! ./components/layout/container */ "./resources/js/components/layout/container/index.tsx"));
 function App() {
-  return react_1["default"].createElement("div", null, react_1["default"].createElement("h1", null, "Hello, world!"));
+  return react_1["default"].createElement(container_1["default"], {
+    verticalCenter: true
+  }, react_1["default"].createElement(pin_input_1["default"], null));
 }
 react_dom_1["default"].render(react_1["default"].createElement(App, null), document.getElementById('root'));
+
+/***/ }),
+
+/***/ "./resources/js/components/layout/container/Container.tsx":
+/*!****************************************************************!*\
+  !*** ./resources/js/components/layout/container/Container.tsx ***!
+  \****************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var Container = function Container(_ref) {
+  var _ref$children = _ref.children,
+    children = _ref$children === void 0 ? null : _ref$children,
+    _ref$fullWidth = _ref.fullWidth,
+    fullWidth = _ref$fullWidth === void 0 ? false : _ref$fullWidth,
+    _ref$verticalCenter = _ref.verticalCenter,
+    verticalCenter = _ref$verticalCenter === void 0 ? false : _ref$verticalCenter;
+  return fullWidth ? react_1["default"].createElement("div", {
+    className: " ".concat(verticalCenter ? ' flex flex-col items-stretch justify-center' : '')
+  }, children) : react_1["default"].createElement("div", {
+    className: "container ".concat(verticalCenter ? ' flex flex-col items-stretch justify-center' : '')
+  }, children);
+};
+exports["default"] = Container;
+
+/***/ }),
+
+/***/ "./resources/js/components/layout/container/index.tsx":
+/*!************************************************************!*\
+  !*** ./resources/js/components/layout/container/index.tsx ***!
+  \************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+var Container_1 = __importDefault(__webpack_require__(/*! ./Container */ "./resources/js/components/layout/container/Container.tsx"));
+exports["default"] = Container_1["default"];
+
+/***/ }),
+
+/***/ "./resources/js/components/pin-input/PinInput.tsx":
+/*!********************************************************!*\
+  !*** ./resources/js/components/pin-input/PinInput.tsx ***!
+  \********************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i["return"] && (_r = _i["return"](), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+var __createBinding = this && this.__createBinding || (Object.create ? function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  var desc = Object.getOwnPropertyDescriptor(m, k);
+  if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+    desc = {
+      enumerable: true,
+      get: function get() {
+        return m[k];
+      }
+    };
+  }
+  Object.defineProperty(o, k2, desc);
+} : function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  o[k2] = m[k];
+});
+var __setModuleDefault = this && this.__setModuleDefault || (Object.create ? function (o, v) {
+  Object.defineProperty(o, "default", {
+    enumerable: true,
+    value: v
+  });
+} : function (o, v) {
+  o["default"] = v;
+});
+var __importStar = this && this.__importStar || function (mod) {
+  if (mod && mod.__esModule) return mod;
+  var result = {};
+  if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+  __setModuleDefault(result, mod);
+  return result;
+};
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var PinInputDigit_1 = __importDefault(__webpack_require__(/*! ./PinInputDigit */ "./resources/js/components/pin-input/PinInputDigit.tsx"));
+var PinInput = function PinInput(_ref) {
+  var _ref$digit = _ref.digit,
+    digit = _ref$digit === void 0 ? 4 : _ref$digit,
+    _ref$value = _ref.value,
+    propsValue = _ref$value === void 0 ? "" : _ref$value,
+    _ref$onChange = _ref.onChange,
+    onChange = _ref$onChange === void 0 ? function () {
+      return null;
+    } : _ref$onChange;
+  var _ref2 = (0, react_1.useState)([]),
+    _ref3 = _slicedToArray(_ref2, 2),
+    digits = _ref3[0],
+    setDigits = _ref3[1];
+  var inputted = (0, react_1.useMemo)(function () {
+    return digits.join("");
+  }, [digits]);
+  var handleFillDigit = function handleFillDigit(value, index) {
+    setDigits(function () {
+      var s = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+      s[index] = value;
+      return s;
+    });
+  };
+  (0, react_1.useEffect)(function () {
+    setDigits(propsValue.split(""));
+  }, [propsValue]);
+  (0, react_1.useEffect)(function () {
+    if (inputted === propsValue) {
+      //
+    } else {
+      onChange(inputted.substring(0, digit));
+    }
+  }, [inputted]);
+  return react_1["default"].createElement("div", {
+    className: "flex gap-2 justify-center items-center"
+  }, Array.from({
+    length: digit
+  }, function (v, k) {
+    return k;
+  }).map(function (k, kIndex) {
+    var _a;
+    return react_1["default"].createElement("div", {
+      key: kIndex
+    }, react_1["default"].createElement(PinInputDigit_1["default"], {
+      value: (_a = digits === null || digits === void 0 ? void 0 : digits[kIndex]) !== null && _a !== void 0 ? _a : "",
+      onFill: function onFill(p) {
+        return handleFillDigit(p, kIndex);
+      }
+    }));
+  }));
+};
+exports["default"] = PinInput;
+
+/***/ }),
+
+/***/ "./resources/js/components/pin-input/PinInputDigit.tsx":
+/*!*************************************************************!*\
+  !*** ./resources/js/components/pin-input/PinInputDigit.tsx ***!
+  \*************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var PinInputDigit = function PinInputDigit(_ref) {
+  var _ref$value = _ref.value,
+    value = _ref$value === void 0 ? "" : _ref$value,
+    _ref$onFill = _ref.onFill,
+    onFill = _ref$onFill === void 0 ? function () {
+      return null;
+    } : _ref$onFill;
+  return react_1["default"].createElement("div", null, value);
+};
+exports["default"] = PinInputDigit;
+
+/***/ }),
+
+/***/ "./resources/js/components/pin-input/index.tsx":
+/*!*****************************************************!*\
+  !*** ./resources/js/components/pin-input/index.tsx ***!
+  \*****************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+var PinInput_1 = __importDefault(__webpack_require__(/*! ./PinInput */ "./resources/js/components/pin-input/PinInput.tsx"));
+exports["default"] = PinInput_1["default"];
+
+/***/ }),
+
+/***/ "./resources/js/pages/pin-input/PinInputPage.tsx":
+/*!*******************************************************!*\
+  !*** ./resources/js/pages/pin-input/PinInputPage.tsx ***!
+  \*******************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var pin_input_1 = __importDefault(__webpack_require__(/*! ../../components/pin-input */ "./resources/js/components/pin-input/index.tsx"));
+var PinInputPage = function PinInputPage() {
+  return react_1["default"].createElement("div", null, react_1["default"].createElement(pin_input_1["default"], null));
+};
+exports["default"] = PinInputPage;
+
+/***/ }),
+
+/***/ "./resources/js/pages/pin-input/index.tsx":
+/*!************************************************!*\
+  !*** ./resources/js/pages/pin-input/index.tsx ***!
+  \************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+var PinInputPage_1 = __importDefault(__webpack_require__(/*! ./PinInputPage */ "./resources/js/pages/pin-input/PinInputPage.tsx"));
+exports["default"] = PinInputPage_1["default"];
 
 /***/ }),
 

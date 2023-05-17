@@ -1,0 +1,9 @@
+.container {
+    min-height: calc(100% - 40px);
+    max-width: 1200px; /* sets the maximum width of the container */
+    margin: 0 auto; /* centers the container horizontally */
+    padding: 20px; /* adds padding inside the container */
+    // box-sizing: border-box; /* includes padding and border in the container's total width */
+    // background-color: #fff; /* sets the background color of the container */
+    // border: 1px solid #ccc; /* sets a border around the container */
+}

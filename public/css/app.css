@@ -1,1 +1,38 @@
+.gap-0 {
+  gap: 0px;
+}
 
+.gap-1 {
+  gap: 4px;
+}
+
+.gap-2 {
+  gap: 8px;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.items-stretch {
+  align-items: stretch;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.container {
+  min-height: calc(100% - 40px);
+  max-width: 1200px; /* sets the maximum width of the container */
+  margin: 0 auto; /* centers the container horizontally */
+  padding: 20px; /* adds padding inside the container */
+}

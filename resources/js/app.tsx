@@ -1,11 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import PinInputPage from './pages/pin-input';
+import Container from './components/layout/container';
 
 function App() {
   return (
-    <div>
-      <h1>Hello, world!</h1>
-    </div>
+    <Container verticalCenter>
+        <PinInputPage />
+    </Container>
   );
 }
 
