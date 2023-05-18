@@ -33,11 +33,6 @@ const PinInputDigit: FC<
 }) => {
     const inputRef = useRef<HTMLInputElement>(null);
 
-    const placeholder = useMemo(
-        () => Math.floor(Math.random() * 10).toString(),
-        []
-    );
-
     const formattedValue = useMemo(
         () =>
             digitValue
@@ -85,7 +80,7 @@ const PinInputDigit: FC<
             onChange={handleChange}
             onClick={onClick}
             className="pin-input-digit"
-            placeholder={placeholder}
+            placeholder={"*"}
             type={isSecret ? "password" : "text"}
         />
     );
