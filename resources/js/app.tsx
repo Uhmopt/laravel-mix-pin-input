@@ -1,14 +1,19 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import PinInputPage from './pages/pin-input';
-import Container from './components/layout/container';
+import React from "react";
+import { createRoot } from "react-dom/client";
+import Container from "./components/layout/container";
+import PinInputPage from "./pages/pin-input";
 
 function App() {
-  return (
-    <Container verticalCenter>
-        <PinInputPage />
-    </Container>
-  );
+    return (
+        <Container verticalCenter>
+            <PinInputPage />
+        </Container>
+    );
 }
 
-ReactDOM.render(<App />, document.getElementById('root'));
+const rootElement = document.getElementById("root");
+
+if (rootElement) {
+    const root = createRoot(rootElement);
+    root.render(<App />);
+}

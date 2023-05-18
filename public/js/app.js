@@ -19,15 +19,19 @@ Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
 var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-var react_dom_1 = __importDefault(__webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js"));
-var pin_input_1 = __importDefault(__webpack_require__(/*! ./pages/pin-input */ "./resources/js/pages/pin-input/index.tsx"));
+var client_1 = __webpack_require__(/*! react-dom/client */ "./node_modules/react-dom/client.js");
 var container_1 = __importDefault(__webpack_require__(/*! ./components/layout/container */ "./resources/js/components/layout/container/index.tsx"));
+var pin_input_1 = __importDefault(__webpack_require__(/*! ./pages/pin-input */ "./resources/js/pages/pin-input/index.tsx"));
 function App() {
   return react_1["default"].createElement(container_1["default"], {
     verticalCenter: true
   }, react_1["default"].createElement(pin_input_1["default"], null));
 }
-react_dom_1["default"].render(react_1["default"].createElement(App, null), document.getElementById('root'));
+var rootElement = document.getElementById("root");
+if (rootElement) {
+  var root = (0, client_1.createRoot)(rootElement);
+  root.render(react_1["default"].createElement(App, null));
+}
 
 /***/ }),
 
@@ -141,6 +145,7 @@ Object.defineProperty(exports, "__esModule", ({
 }));
 var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var PinInputDigit_1 = __importDefault(__webpack_require__(/*! ./PinInputDigit */ "./resources/js/components/pin-input/PinInputDigit.tsx"));
+var inputTypes_1 = __webpack_require__(/*! ./inputTypes */ "./resources/js/components/pin-input/inputTypes.ts");
 var PinInput = function PinInput(_ref) {
   var _ref$digit = _ref.digit,
     digit = _ref$digit === void 0 ? 4 : _ref$digit,
@@ -149,47 +154,98 @@ var PinInput = function PinInput(_ref) {
     _ref$onChange = _ref.onChange,
     onChange = _ref$onChange === void 0 ? function () {
       return null;
-    } : _ref$onChange;
-  var _ref2 = (0, react_1.useState)([]),
+    } : _ref$onChange,
+    _ref$onFilled = _ref.onFilled,
+    onFilled = _ref$onFilled === void 0 ? function () {
+      return null;
+    } : _ref$onFilled,
+    _ref$inputFormat = _ref.inputFormat,
+    inputFormat = _ref$inputFormat === void 0 ? inputTypes_1.PIN_INPUT_TYPES.NUMBER : _ref$inputFormat,
+    _ref$isSecret = _ref.isSecret,
+    isSecret = _ref$isSecret === void 0 ? false : _ref$isSecret;
+  var _ref2 = (0, react_1.useState)(0),
     _ref3 = _slicedToArray(_ref2, 2),
-    digits = _ref3[0],
-    setDigits = _ref3[1];
+    currentIndex = _ref3[0],
+    setCurrentIndex = _ref3[1];
+  var _ref4 = (0, react_1.useState)([]),
+    _ref5 = _slicedToArray(_ref4, 2),
+    digits = _ref5[0],
+    setDigits = _ref5[1];
   var inputted = (0, react_1.useMemo)(function () {
     return digits.join("");
-  }, [digits]);
+  }, [JSON.stringify(digits)]);
   var handleFillDigit = function handleFillDigit(value, index) {
     setDigits(function () {
       var s = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-      s[index] = value;
+      value.split("").forEach(function (c, cIndex) {
+        if (index + cIndex < digit) {
+          s[index + cIndex] = c;
+        }
+      });
+      return s;
+    });
+    setCurrentIndex(function () {
+      var s = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+      return Math.min(s + value.length, digit);
+    });
+  };
+  var handleDelete = function handleDelete(index) {
+    setDigits(function () {
+      var s = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+      s[index] = "";
       return s;
     });
   };
-  (0, react_1.useEffect)(function () {
-    setDigits(propsValue.split(""));
-  }, [propsValue]);
+  var handleBack = function handleBack(index) {
+    handleDelete(index);
+    setCurrentIndex(function () {
+      var s = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+      return Math.max(0, s - 1);
+    });
+  };
+  var handleClick = function handleClick(index) {
+    setCurrentIndex(index);
+  };
   (0, react_1.useEffect)(function () {
     if (inputted === propsValue) {
       //
     } else {
       onChange(inputted.substring(0, digit));
+      if (inputted.length >= digit) {
+        onFilled(inputted.substring(0, digit));
+      }
     }
   }, [inputted]);
+  (0, react_1.useEffect)(function () {
+    setDigits(Array.from({
+      length: digit
+    }, function (v, k) {
+      var _a;
+      return (_a = propsValue === null || propsValue === void 0 ? void 0 : propsValue[k]) !== null && _a !== void 0 ? _a : "";
+    }));
+  }, [digit, propsValue]);
   return react_1["default"].createElement("div", {
-    className: "flex gap-2 justify-center items-center"
-  }, Array.from({
-    length: digit
-  }, function (v, k) {
-    return k;
-  }).map(function (k, kIndex) {
-    var _a;
-    return react_1["default"].createElement("div", {
-      key: kIndex
-    }, react_1["default"].createElement(PinInputDigit_1["default"], {
-      value: (_a = digits === null || digits === void 0 ? void 0 : digits[kIndex]) !== null && _a !== void 0 ? _a : "",
+    className: "flex gap-6 justify-center items-center"
+  }, digits.map(function (k, kIndex) {
+    return react_1["default"].createElement(PinInputDigit_1["default"], {
+      key: "input_digit_".concat(kIndex, "_").concat(JSON.stringify(digits)),
+      digit: k,
       onFill: function onFill(p) {
         return handleFillDigit(p, kIndex);
-      }
-    }));
+      },
+      onDelete: function onDelete() {
+        return handleDelete(kIndex);
+      },
+      onBack: function onBack() {
+        return handleBack(kIndex);
+      },
+      inputFormat: inputFormat,
+      hasFocus: currentIndex === kIndex,
+      onClick: function onClick() {
+        return handleClick(kIndex);
+      },
+      isSecret: isSecret
+    });
   }));
 };
 exports["default"] = PinInput;
@@ -204,23 +260,108 @@ exports["default"] = PinInput;
 
 
 
-var __importDefault = this && this.__importDefault || function (mod) {
-  return mod && mod.__esModule ? mod : {
-    "default": mod
-  };
+var __createBinding = this && this.__createBinding || (Object.create ? function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  var desc = Object.getOwnPropertyDescriptor(m, k);
+  if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+    desc = {
+      enumerable: true,
+      get: function get() {
+        return m[k];
+      }
+    };
+  }
+  Object.defineProperty(o, k2, desc);
+} : function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  o[k2] = m[k];
+});
+var __setModuleDefault = this && this.__setModuleDefault || (Object.create ? function (o, v) {
+  Object.defineProperty(o, "default", {
+    enumerable: true,
+    value: v
+  });
+} : function (o, v) {
+  o["default"] = v;
+});
+var __importStar = this && this.__importStar || function (mod) {
+  if (mod && mod.__esModule) return mod;
+  var result = {};
+  if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+  __setModuleDefault(result, mod);
+  return result;
 };
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
-var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var inputTypes_1 = __webpack_require__(/*! ./inputTypes */ "./resources/js/components/pin-input/inputTypes.ts");
 var PinInputDigit = function PinInputDigit(_ref) {
-  var _ref$value = _ref.value,
-    value = _ref$value === void 0 ? "" : _ref$value,
+  var _ref$digit = _ref.digit,
+    digitValue = _ref$digit === void 0 ? "" : _ref$digit,
     _ref$onFill = _ref.onFill,
     onFill = _ref$onFill === void 0 ? function () {
       return null;
-    } : _ref$onFill;
-  return react_1["default"].createElement("div", null, value);
+    } : _ref$onFill,
+    _ref$onDelete = _ref.onDelete,
+    onDelete = _ref$onDelete === void 0 ? function () {
+      return null;
+    } : _ref$onDelete,
+    _ref$onBack = _ref.onBack,
+    onBack = _ref$onBack === void 0 ? function () {
+      return null;
+    } : _ref$onBack,
+    _ref$inputFormat = _ref.inputFormat,
+    inputFormat = _ref$inputFormat === void 0 ? inputTypes_1.PIN_INPUT_TYPES.NUMBER : _ref$inputFormat,
+    _ref$hasFocus = _ref.hasFocus,
+    hasFocus = _ref$hasFocus === void 0 ? false : _ref$hasFocus,
+    onClick = _ref.onClick,
+    _ref$isSecret = _ref.isSecret,
+    isSecret = _ref$isSecret === void 0 ? false : _ref$isSecret;
+  var inputRef = (0, react_1.useRef)(null);
+  var placeholder = (0, react_1.useMemo)(function () {
+    return Math.floor(Math.random() * 10).toString();
+  }, []);
+  var formattedValue = (0, react_1.useMemo)(function () {
+    return digitValue.split("").filter(function (c) {
+      return inputFormat.test(c) || !c;
+    }).slice(0, 1).join("");
+  }, [digitValue]);
+  var handleKeyDown = function handleKeyDown(e) {
+    if (e.key === "Backspace") {
+      if (!formattedValue) {
+        onBack();
+      }
+    }
+  };
+  var handleChange = function handleChange(e) {
+    var _a, _b;
+    var newValue = ((_b = (_a = e.target) === null || _a === void 0 ? void 0 : _a.value) !== null && _b !== void 0 ? _b : "").split("").filter(function (c) {
+      return inputFormat.test(c) || !c;
+    }).join("");
+    if (newValue.length > 0) {
+      onFill(newValue);
+    } else {
+      onDelete();
+    }
+  };
+  (0, react_1.useEffect)(function () {
+    if (hasFocus) {
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
+    }
+  }, [hasFocus]);
+  return react_1["default"].createElement("input", {
+    ref: inputRef,
+    value: formattedValue,
+    onKeyDown: handleKeyDown,
+    onChange: handleChange,
+    onClick: onClick,
+    className: "pin-input-digit",
+    placeholder: placeholder,
+    type: isSecret ? "password" : "text"
+  });
 };
 exports["default"] = PinInputDigit;
 
@@ -247,6 +388,25 @@ exports["default"] = PinInput_1["default"];
 
 /***/ }),
 
+/***/ "./resources/js/components/pin-input/inputTypes.ts":
+/*!*********************************************************!*\
+  !*** ./resources/js/components/pin-input/inputTypes.ts ***!
+  \*********************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports.PIN_INPUT_TYPES = void 0;
+exports.PIN_INPUT_TYPES = {
+  NUMBER: /^[0-9]$/,
+  NUMBERS: /^[0-9]+$/
+};
+
+/***/ }),
+
 /***/ "./resources/js/pages/pin-input/PinInputPage.tsx":
 /*!*******************************************************!*\
   !*** ./resources/js/pages/pin-input/PinInputPage.tsx ***!
@@ -255,6 +415,43 @@ exports["default"] = PinInput_1["default"];
 
 
 
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i["return"] && (_r = _i["return"](), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+var __createBinding = this && this.__createBinding || (Object.create ? function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  var desc = Object.getOwnPropertyDescriptor(m, k);
+  if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+    desc = {
+      enumerable: true,
+      get: function get() {
+        return m[k];
+      }
+    };
+  }
+  Object.defineProperty(o, k2, desc);
+} : function (o, m, k, k2) {
+  if (k2 === undefined) k2 = k;
+  o[k2] = m[k];
+});
+var __setModuleDefault = this && this.__setModuleDefault || (Object.create ? function (o, v) {
+  Object.defineProperty(o, "default", {
+    enumerable: true,
+    value: v
+  });
+} : function (o, v) {
+  o["default"] = v;
+});
+var __importStar = this && this.__importStar || function (mod) {
+  if (mod && mod.__esModule) return mod;
+  var result = {};
+  if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+  __setModuleDefault(result, mod);
+  return result;
+};
 var __importDefault = this && this.__importDefault || function (mod) {
   return mod && mod.__esModule ? mod : {
     "default": mod
@@ -263,10 +460,38 @@ var __importDefault = this && this.__importDefault || function (mod) {
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
-var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var pin_input_1 = __importDefault(__webpack_require__(/*! ../../components/pin-input */ "./resources/js/components/pin-input/index.tsx"));
 var PinInputPage = function PinInputPage() {
-  return react_1["default"].createElement("div", null, react_1["default"].createElement(pin_input_1["default"], null));
+  var _ref = (0, react_1.useState)(false),
+    _ref2 = _slicedToArray(_ref, 2),
+    isSecret = _ref2[0],
+    setIsSecret = _ref2[1];
+  var handleFilled = function handleFilled() {
+    var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "";
+    alert(value);
+  };
+  return react_1["default"].createElement("div", null, react_1["default"].createElement("h4", {
+    className: "text-center"
+  }, "Default"), react_1["default"].createElement(pin_input_1["default"], {
+    isSecret: isSecret,
+    onFilled: handleFilled
+  }), react_1["default"].createElement("br", null), react_1["default"].createElement("h4", {
+    className: "text-center"
+  }, "Default Value: 4567"), react_1["default"].createElement(pin_input_1["default"], {
+    value: "4567",
+    isSecret: isSecret,
+    onFilled: handleFilled
+  }), react_1["default"].createElement("br", null), react_1["default"].createElement("div", {
+    className: "flex justify-center"
+  }, react_1["default"].createElement("button", {
+    onClick: function onClick() {
+      return setIsSecret(function () {
+        var s = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+        return !s;
+      });
+    }
+  }, isSecret ? "show" : "hide")));
 };
 exports["default"] = PinInputPage;
 
@@ -30173,6 +30398,38 @@ if (
 }
         
   })();
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/react-dom/client.js":
+/*!******************************************!*\
+  !*** ./node_modules/react-dom/client.js ***!
+  \******************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+
+var m = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
+if (false) {} else {
+  var i = m.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+  exports.createRoot = function(c, o) {
+    i.usingClientEntryPoint = true;
+    try {
+      return m.createRoot(c, o);
+    } finally {
+      i.usingClientEntryPoint = false;
+    }
+  };
+  exports.hydrateRoot = function(c, h, o) {
+    i.usingClientEntryPoint = true;
+    try {
+      return m.hydrateRoot(c, h, o);
+    } finally {
+      i.usingClientEntryPoint = false;
+    }
+  };
 }
 
 
